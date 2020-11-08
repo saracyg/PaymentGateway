@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PaymentGateway.Contract;
 
 namespace BankApiMock.Controllers
 {
@@ -7,9 +8,14 @@ namespace BankApiMock.Controllers
     public class PaymentController : ControllerBase
     {
         [HttpPost]
-        public int Post()
+        public PaymentResult ProcessPayment(Payment payment)
         {
-            return 1;
+            return
+                new PaymentResult
+                {
+                    PaymentId = 23,
+                    PaymentStatus = PaymentStatus.Succeeded
+                };
         }
     }
 }
