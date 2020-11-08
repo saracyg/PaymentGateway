@@ -7,11 +7,11 @@ namespace PaymentGateway.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class PaymentController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<PaymentController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public PaymentController(ILogger<PaymentController> logger)
         {
             _logger = logger;
         }
