@@ -29,10 +29,7 @@ namespace PaymentGateway.Payment
         {
             var result = await _paymentApiClient.SendPayment(payment);
 
-            var paymentDetails = _mapper.Map<Database.PaymentDetails>(payment);
-            paymentDetails.PaymentId = result.PaymentId;
-            paymentDetails.PaymentStatus = result.PaymentStatus;
-            paymentDetails.MaskedCardNumber = _cardNumberMaskingService.MaskCardNumber(payment.CardNumber);
+            var paymentDetails = CreatePaymentDetails(payment, result);
 
             await _paymentRepository.SavePayment(paymentDetails);
 
@@ -44,6 +41,15 @@ namespace PaymentGateway.Payment
             var paymentDetails = await _paymentRepository.GetPayment(id);
 
             return _mapper.Map<Contract.PaymentDetails>(paymentDetails);
+        }
+
+        private Database.PaymentDetails CreatePaymentDetails(Contract.Payment payment, PaymentResult result)
+        {
+            var paymentDetails = _mapper.Map<Database.PaymentDetails>(payment);
+            paymentDetails.PaymentId = result.PaymentId;
+            paymentDetails.PaymentStatus = result.PaymentStatus;
+            paymentDetails.MaskedCardNumber = _cardNumberMaskingService.MaskCardNumber(payment.CardNumber);
+            return paymentDetails;
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using PaymentGateway.ConfigOptions;
 using PaymentGateway.Contract;
 
 namespace PaymentGateway.Payment
@@ -17,12 +18,10 @@ namespace PaymentGateway.Payment
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _uri;
 
-        private readonly string _apiAddressKey = "PaymentApiAddress";
-
-        public PaymentApiClient(IHttpClientFactory httpClientFactory, IConfiguration config)
+        public PaymentApiClient(IHttpClientFactory httpClientFactory, IOptions<PaymentApiOptions> config)
         {
             _httpClientFactory = httpClientFactory;
-            _uri = config.GetValue<string>(_apiAddressKey);
+            _uri = config.Value.Address;
         }
 
         public async Task<PaymentResult> SendPayment(Contract.Payment payment)

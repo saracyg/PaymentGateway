@@ -31,6 +31,8 @@ namespace PaymentGateway
             services.AddScoped<ICardNumberMaskingService, CardNumberMaskingService>();
             services.AddOptions<DatabaseConfigOptions>()
                 .Bind(Configuration.GetSection(DatabaseConfigOptions.DatabaseConfig));
+            services.AddOptions<PaymentApiOptions>()
+                .Bind(Configuration.GetSection(PaymentApiOptions.PaymentApi));
             services.AddSingleton<IMongoClient>(s => new MongoClient(Configuration.GetConnectionString("MongoDb")));
             services.AddScoped<IDatabaseContext, DatabaseContext>();
             services.AddAutoMapper(typeof(Startup));
