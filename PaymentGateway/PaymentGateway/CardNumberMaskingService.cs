@@ -1,6 +1,4 @@
-﻿using PaymentGateway.Contract;
-
-namespace PaymentGateway
+﻿namespace PaymentGateway
 {
     public interface ICardNumberMaskingService
     {
