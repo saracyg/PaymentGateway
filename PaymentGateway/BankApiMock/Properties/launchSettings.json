@@ -11,7 +11,7 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "payment",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -19,9 +19,9 @@
     },
     "BankApiMock": {
         "commandName": "Project",
-        "launchBrowser": true,
+        "launchBrowser": false,
         "launchUrl": "payment",
-        "applicationUrl": "https://localhost:5002",
+        "applicationUrl": "https://localhost:44396",
         "environmentVariables": {
             "ASPNETCORE_ENVIRONMENT": "Development"
         }
