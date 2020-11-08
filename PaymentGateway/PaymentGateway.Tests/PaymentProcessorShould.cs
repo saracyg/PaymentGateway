@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -14,19 +13,23 @@ namespace PaymentGateway.Tests
         private IPaymentProcessor _paymentProcessor;
         private Mock<IPaymentApiClient> _apiClient;
         private Mock<IPaymentRepository> _repository;
-        private Mock<IMapper> _mapper;
+        private Mock<IPaymentMapper> _mapper;
         private Contract.Payment _newPayment;
+        private PaymentResult _paymentResult;
 
         [SetUp]
         public void Setup()
         {
             _apiClient = new Mock<IPaymentApiClient>();
             _repository = new Mock<IPaymentRepository>();
-            _mapper = new Mock<IMapper>();
+            _mapper = new Mock<IPaymentMapper>();
 
             _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object);
 
             _newPayment = new Contract.Payment();
+
+            _paymentResult = new PaymentResult();
+            _apiClient.Setup(c => c.SendPayment(_newPayment)).ReturnsAsync(_paymentResult);
         }
 
         [Test]
@@ -40,19 +43,16 @@ namespace PaymentGateway.Tests
         [Test]
         public async Task ReturnResultFromApiClient()
         {
-            var expectedResult = new PaymentResult();
-            _apiClient.Setup(c => c.SendPayment(_newPayment)).ReturnsAsync(expectedResult);
-
             var result = await _paymentProcessor.ProcessNewPayment(_newPayment);
 
-            result.Should().Be(expectedResult);
+            result.Should().Be(_paymentResult);
         }
 
         [Test]
         public async Task SavePayment()
         {
             var mappedPayment = new PaymentDetails();
-            _mapper.Setup(m => m.Map<PaymentDetails>(_newPayment)).Returns(mappedPayment);
+            _mapper.Setup(m => m.Map(_newPayment, _paymentResult)).Returns(mappedPayment);
             await _paymentProcessor.ProcessNewPayment(_newPayment);
 
             _repository.Verify(c => c.SavePayment(mappedPayment), Times.Once);

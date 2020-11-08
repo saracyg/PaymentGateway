@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using AutoMapper;
 using PaymentGateway.Contract;
 
 namespace PaymentGateway.Payment
@@ -14,20 +13,20 @@ namespace PaymentGateway.Payment
     {
         private readonly IPaymentApiClient _paymentApiClient;
         private readonly IPaymentRepository _paymentRepository;
-        private readonly IMapper _mapper;
+        private readonly IPaymentMapper _paymentMapper;
 
-        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository, IMapper mapper)
+        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository, IPaymentMapper paymentMapper)
         {
             _paymentApiClient = paymentApiClient;
             _paymentRepository = paymentRepository;
-            _mapper = mapper;
+            _paymentMapper = paymentMapper;
         }
 
         public async Task<PaymentResult> ProcessNewPayment(Contract.Payment payment)
         {
             var result = await _paymentApiClient.SendPayment(payment);
 
-            var paymentDetails = _mapper.Map<PaymentDetails>(payment);
+            var paymentDetails = _paymentMapper.Map(payment, result);
             _paymentRepository.SavePayment(paymentDetails);
 
             return result;
