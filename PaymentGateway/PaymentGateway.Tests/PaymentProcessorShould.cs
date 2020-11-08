@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoMapper;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using PaymentGateway.Contract;
@@ -11,6 +12,7 @@ namespace PaymentGateway.Tests
         private IPaymentProcessor _paymentProcessor;
         private Mock<IPaymentApiClient> _apiClient;
         private Mock<IPaymentRepository> _repository;
+        private Mock<IMapper> _mapper;
         private Payment _newPayment;
 
         [SetUp]
@@ -18,8 +20,9 @@ namespace PaymentGateway.Tests
         {
             _apiClient = new Mock<IPaymentApiClient>();
             _repository = new Mock<IPaymentRepository>();
+            _mapper = new Mock<IMapper>();
 
-            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object);
+            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object);
 
             _newPayment = new Payment();
         }
@@ -46,9 +49,11 @@ namespace PaymentGateway.Tests
         [Test]
         public void SavePayment()
         {
+            var mappedPayment = new PaymentDetails();
+            _mapper.Setup(m => m.Map<PaymentDetails>(_newPayment)).Returns(mappedPayment);
             _paymentProcessor.ProcessNewPayment(_newPayment);
 
-            _repository.Verify(c => c.SavePayment(It.IsAny<PaymentDetails>()), Times.Once);
+            _repository.Verify(c => c.SavePayment(mappedPayment), Times.Once);
         }
     }
 }
