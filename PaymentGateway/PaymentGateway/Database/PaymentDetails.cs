@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
+﻿using MongoDB.Bson;
+using PaymentGateway.Contract;
 
-namespace PaymentGateway.Contract
+namespace PaymentGateway.Database
 {
-    [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class PaymentDetails
     {
+        public ObjectId Id { get; set; }
         public int PaymentId { get; set; }
         public string MaskedCardNumber { get; set; }
         public string CardholderName { get; set; }

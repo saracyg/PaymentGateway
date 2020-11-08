@@ -27,7 +27,7 @@ namespace PaymentGateway.Payment
             var result = await _paymentApiClient.SendPayment(payment);
 
             var paymentDetails = _paymentMapper.Map(payment, result);
-            _paymentRepository.SavePayment(paymentDetails);
+            await _paymentRepository.SavePayment(paymentDetails);
 
             return result;
         }

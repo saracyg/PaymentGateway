@@ -1,19 +1,27 @@
 ﻿using System;
-using PaymentGateway.Contract;
+using System.Threading.Tasks;
+using PaymentGateway.Database;
 
 namespace PaymentGateway.Payment
 {
     public interface IPaymentRepository
     {
-        bool SavePayment(PaymentDetails payment);
+        Task SavePayment(PaymentDetails payment);
         bool GetPayment(int id);
     }
 
     public class PaymentRepository : IPaymentRepository
     {
-        public bool SavePayment(PaymentDetails payment)
+        private readonly IDatabaseContext _databaseContext;
+
+        public PaymentRepository(IDatabaseContext databaseContext)
         {
-            return false;
+            _databaseContext = databaseContext;
+        }
+
+        public async Task SavePayment(PaymentDetails payment)
+        {
+            await _databaseContext.PaymentDetails.InsertOneAsync(payment);
         }
 
         public bool GetPayment(int id)

@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MongoDB.Driver;
+using PaymentGateway.ConfigOptions;
+using PaymentGateway.Database;
 using PaymentGateway.Payment;
 
 namespace PaymentGateway
@@ -25,6 +28,10 @@ namespace PaymentGateway
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentApiClient, PaymentApiClient>();
             services.AddScoped<IPaymentMapper, PaymentMapper>();
+            services.AddOptions<DatabaseConfigOptions>()
+                .Bind(Configuration.GetSection(DatabaseConfigOptions.DatabaseConfig));
+            services.AddSingleton<IMongoClient>(s => new MongoClient(Configuration.GetConnectionString("MongoDb")));
+            services.AddScoped<IDatabaseContext, DatabaseContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

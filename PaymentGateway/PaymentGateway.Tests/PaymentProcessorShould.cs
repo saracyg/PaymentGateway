@@ -51,7 +51,7 @@ namespace PaymentGateway.Tests
         [Test]
         public async Task SavePayment()
         {
-            var mappedPayment = new PaymentDetails();
+            var mappedPayment = new Database.PaymentDetails();
             _mapper.Setup(m => m.Map(_newPayment, _paymentResult)).Returns(mappedPayment);
             await _paymentProcessor.ProcessNewPayment(_newPayment);
 
