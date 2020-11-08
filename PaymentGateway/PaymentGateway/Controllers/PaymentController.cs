@@ -25,7 +25,7 @@ namespace PaymentGateway.Controllers
             return await _paymentProcessor.ProcessNewPayment(payment);
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<PaymentDetails> Get(int id)
         {
             return await _paymentProcessor.GetPayment(id);

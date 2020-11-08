@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MongoDB.Driver;
 using PaymentGateway.Database;
 
 namespace PaymentGateway.Payment
@@ -26,7 +26,7 @@ namespace PaymentGateway.Payment
 
         public async Task<PaymentDetails> GetPayment(int id)
         {
-            throw new NotImplementedException();
+            return await _databaseContext.PaymentDetails.Find(i => i.PaymentId == id).SingleOrDefaultAsync();
         }
     }
 }
