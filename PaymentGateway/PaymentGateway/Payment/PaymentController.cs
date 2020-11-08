@@ -1,21 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using PaymentGateway.Contract;
-using PaymentGateway.Payment;
 
-namespace PaymentGateway.Controllers
+namespace PaymentGateway.Payment
 {
     [ApiController]
     [Route("[controller]")]
     public class PaymentController : ControllerBase
     {
-        private readonly ILogger<PaymentController> _logger;
         private readonly IPaymentProcessor _paymentProcessor;
 
-        public PaymentController(ILogger<PaymentController> logger, IPaymentProcessor paymentProcessor)
+        public PaymentController(IPaymentProcessor paymentProcessor)
         {
-            _logger = logger;
             _paymentProcessor = paymentProcessor;
         }
 
