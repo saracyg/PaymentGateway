@@ -7,7 +7,7 @@ namespace PaymentGateway.Payment
     public interface IPaymentRepository
     {
         Task SavePayment(PaymentDetails payment);
-        bool GetPayment(int id);
+        Task<PaymentDetails> GetPayment(int id);
     }
 
     public class PaymentRepository : IPaymentRepository
@@ -24,7 +24,7 @@ namespace PaymentGateway.Payment
             await _databaseContext.PaymentDetails.InsertOneAsync(payment);
         }
 
-        public bool GetPayment(int id)
+        public async Task<PaymentDetails> GetPayment(int id)
         {
             throw new NotImplementedException();
         }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AutoMapper;
 using PaymentGateway.Contract;
 
 namespace PaymentGateway.Payment
@@ -13,20 +14,26 @@ namespace PaymentGateway.Payment
     {
         private readonly IPaymentApiClient _paymentApiClient;
         private readonly IPaymentRepository _paymentRepository;
-        private readonly IPaymentMapper _paymentMapper;
+        private readonly IMapper _mapper;
+        private readonly ICardNumberMaskingService _cardNumberMaskingService;
 
-        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository, IPaymentMapper paymentMapper)
+        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository,IMapper mapper, ICardNumberMaskingService cardNumberMaskingService)
         {
             _paymentApiClient = paymentApiClient;
             _paymentRepository = paymentRepository;
-            _paymentMapper = paymentMapper;
+            _mapper = mapper;
+            _cardNumberMaskingService = cardNumberMaskingService;
         }
 
         public async Task<PaymentResult> ProcessNewPayment(Contract.Payment payment)
         {
             var result = await _paymentApiClient.SendPayment(payment);
 
-            var paymentDetails = _paymentMapper.Map(payment, result);
+            var paymentDetails = _mapper.Map<Database.PaymentDetails>(payment);
+            paymentDetails.PaymentId = result.PaymentId;
+            paymentDetails.PaymentStatus = result.PaymentStatus;
+            paymentDetails.MaskedCardNumber = _cardNumberMaskingService.MaskCardNumber(payment.CardNumber);
+
             await _paymentRepository.SavePayment(paymentDetails);
 
             return result;
@@ -34,7 +41,9 @@ namespace PaymentGateway.Payment
 
         public async Task<PaymentDetails> GetPayment(int id)
         {
-            return new PaymentDetails();
+            var paymentDetails = await _paymentRepository.GetPayment(id);
+
+            return _mapper.Map<Contract.PaymentDetails>(paymentDetails);
         }
     }
 }

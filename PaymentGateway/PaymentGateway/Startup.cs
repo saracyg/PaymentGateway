@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,11 +28,12 @@ namespace PaymentGateway
             services.AddScoped<IPaymentProcessor, PaymentProcessor>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentApiClient, PaymentApiClient>();
-            services.AddScoped<IPaymentMapper, PaymentMapper>();
+            services.AddScoped<ICardNumberMaskingService, CardNumberMaskingService>();
             services.AddOptions<DatabaseConfigOptions>()
                 .Bind(Configuration.GetSection(DatabaseConfigOptions.DatabaseConfig));
             services.AddSingleton<IMongoClient>(s => new MongoClient(Configuration.GetConnectionString("MongoDb")));
             services.AddScoped<IDatabaseContext, DatabaseContext>();
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
