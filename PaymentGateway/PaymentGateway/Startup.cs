@@ -26,6 +26,9 @@ namespace PaymentGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddScoped<IPaymentProcessor, PaymentProcessor>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentApiClient, PaymentApiClient>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
