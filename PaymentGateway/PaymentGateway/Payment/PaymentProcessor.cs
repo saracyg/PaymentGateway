@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using PaymentGateway.Contract;
 
-namespace PaymentGateway
+namespace PaymentGateway.Payment
 {
     public interface IPaymentProcessor
     {
-        PaymentResult ProcessNewPayment(Payment payment);
+        PaymentResult ProcessNewPayment(Contract.Payment payment);
         PaymentDetails GetPayment(in int id);
     }
 
@@ -22,7 +22,7 @@ namespace PaymentGateway
             _mapper = mapper;
         }
 
-        public PaymentResult ProcessNewPayment(Payment payment)
+        public PaymentResult ProcessNewPayment(Contract.Payment payment)
         {
             var result = _paymentApiClient.SendPayment(payment);
 

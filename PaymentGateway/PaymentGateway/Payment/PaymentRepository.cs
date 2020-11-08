@@ -1,7 +1,7 @@
 ﻿using System;
 using PaymentGateway.Contract;
 
-namespace PaymentGateway
+namespace PaymentGateway.Payment
 {
     public interface IPaymentRepository
     {

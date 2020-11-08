@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Contract;
+using PaymentGateway.Payment;
 
 namespace PaymentGateway.Controllers
 {

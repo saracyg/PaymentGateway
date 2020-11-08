@@ -1,16 +1,16 @@
 ﻿using System;
 using PaymentGateway.Contract;
 
-namespace PaymentGateway
+namespace PaymentGateway.Payment
 {
     public interface IPaymentApiClient
     {
-        PaymentResult SendPayment(Payment payment);
+        PaymentResult SendPayment(Contract.Payment payment);
     }
 
     public class PaymentApiClient : IPaymentApiClient
     {
-        public PaymentResult SendPayment(Payment payment)
+        public PaymentResult SendPayment(Contract.Payment payment)
         {
             throw new NotImplementedException();
         }

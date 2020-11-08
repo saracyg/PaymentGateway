@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using PaymentGateway.Contract;
+using PaymentGateway.Payment;
 
 namespace PaymentGateway.Tests
 {
