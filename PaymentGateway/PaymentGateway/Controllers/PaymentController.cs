@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Contract;
 
@@ -10,22 +9,24 @@ namespace PaymentGateway.Controllers
     public class PaymentController : ControllerBase
     {
         private readonly ILogger<PaymentController> _logger;
+        private readonly IPaymentProcessor _paymentProcessor;
 
-        public PaymentController(ILogger<PaymentController> logger)
+        public PaymentController(ILogger<PaymentController> logger, IPaymentProcessor paymentProcessor)
         {
             _logger = logger;
+            _paymentProcessor = paymentProcessor;
         }
 
         [HttpPost]
         public PaymentResult ProcessPayment(Payment payment)
         {
-            throw new NotImplementedException();
+            return _paymentProcessor.ProcessNewPayment(payment);
         }
 
         [HttpGet]
-        public PaymentDetails Get()
+        public PaymentDetails Get(int id)
         {
-            throw new NotImplementedException();
+            return _paymentProcessor.GetPayment(id);
         }
     }
 }
