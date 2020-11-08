@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaymentGateway.Contract;
 using PaymentGateway.Payment;
@@ -19,15 +20,15 @@ namespace PaymentGateway.Controllers
         }
 
         [HttpPost]
-        public PaymentResult ProcessPayment(Payment payment)
+        public async Task<PaymentResult> ProcessPayment(Contract.Payment payment)
         {
-            return _paymentProcessor.ProcessNewPayment(payment);
+            return await _paymentProcessor.ProcessNewPayment(payment);
         }
 
         [HttpGet]
-        public PaymentDetails Get(int id)
+        public async Task<PaymentDetails> Get(int id)
         {
-            return _paymentProcessor.GetPayment(id);
+            return await _paymentProcessor.GetPayment(id);
         }
     }
 }

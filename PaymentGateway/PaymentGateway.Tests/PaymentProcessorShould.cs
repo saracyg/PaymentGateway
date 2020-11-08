@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
@@ -14,7 +15,7 @@ namespace PaymentGateway.Tests
         private Mock<IPaymentApiClient> _apiClient;
         private Mock<IPaymentRepository> _repository;
         private Mock<IMapper> _mapper;
-        private Payment _newPayment;
+        private Contract.Payment _newPayment;
 
         [SetUp]
         public void Setup()
@@ -25,34 +26,34 @@ namespace PaymentGateway.Tests
 
             _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object);
 
-            _newPayment = new Payment();
+            _newPayment = new Contract.Payment();
         }
 
         [Test]
-        public void SendRequestThroughApiClient()
+        public async Task SendRequestThroughApiClient()
         {
-            _paymentProcessor.ProcessNewPayment(_newPayment);
+            await _paymentProcessor.ProcessNewPayment(_newPayment);
 
             _apiClient.Verify(c => c.SendPayment(_newPayment), Times.Once);
         }
 
         [Test]
-        public void ReturnResultFromApiClient()
+        public async Task ReturnResultFromApiClient()
         {
             var expectedResult = new PaymentResult();
-            _apiClient.Setup(c => c.SendPayment(_newPayment)).Returns(expectedResult);
+            _apiClient.Setup(c => c.SendPayment(_newPayment)).ReturnsAsync(expectedResult);
 
-            var result = _paymentProcessor.ProcessNewPayment(_newPayment);
+            var result = await _paymentProcessor.ProcessNewPayment(_newPayment);
 
             result.Should().Be(expectedResult);
         }
 
         [Test]
-        public void SavePayment()
+        public async Task SavePayment()
         {
             var mappedPayment = new PaymentDetails();
             _mapper.Setup(m => m.Map<PaymentDetails>(_newPayment)).Returns(mappedPayment);
-            _paymentProcessor.ProcessNewPayment(_newPayment);
+            await _paymentProcessor.ProcessNewPayment(_newPayment);
 
             _repository.Verify(c => c.SavePayment(mappedPayment), Times.Once);
         }

@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using PaymentGateway.Payment;
 
 namespace PaymentGateway
@@ -29,6 +28,7 @@ namespace PaymentGateway
         {
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddHttpClient();
             services.AddScoped<IPaymentProcessor, PaymentProcessor>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentApiClient, PaymentApiClient>();

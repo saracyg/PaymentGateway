@@ -13,7 +13,7 @@ namespace PaymentGateway.Payment
     {
         public bool SavePayment(PaymentDetails payment)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public bool GetPayment(int id)

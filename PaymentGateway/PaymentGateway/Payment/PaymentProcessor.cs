@@ -1,12 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Threading.Tasks;
+using AutoMapper;
 using PaymentGateway.Contract;
 
 namespace PaymentGateway.Payment
 {
     public interface IPaymentProcessor
     {
-        PaymentResult ProcessNewPayment(Contract.Payment payment);
-        PaymentDetails GetPayment(in int id);
+        Task<PaymentResult> ProcessNewPayment(Contract.Payment payment);
+        Task<PaymentDetails> GetPayment(int id);
     }
 
     public class PaymentProcessor : IPaymentProcessor
@@ -22,9 +23,9 @@ namespace PaymentGateway.Payment
             _mapper = mapper;
         }
 
-        public PaymentResult ProcessNewPayment(Contract.Payment payment)
+        public async Task<PaymentResult> ProcessNewPayment(Contract.Payment payment)
         {
-            var result = _paymentApiClient.SendPayment(payment);
+            var result = await _paymentApiClient.SendPayment(payment);
 
             var paymentDetails = _mapper.Map<PaymentDetails>(payment);
             _paymentRepository.SavePayment(paymentDetails);
@@ -32,9 +33,9 @@ namespace PaymentGateway.Payment
             return result;
         }
 
-        public PaymentDetails GetPayment(in int id)
+        public async Task<PaymentDetails> GetPayment(int id)
         {
-            throw new System.NotImplementedException();
+            return new PaymentDetails();
         }
     }
 }
