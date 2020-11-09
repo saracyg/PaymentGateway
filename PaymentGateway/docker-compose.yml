@@ -28,9 +28,9 @@ services:
       context: .
       dockerfile: BankApiMock/Dockerfile
     ports:
-      - 44396:5002
+      - 5001:80
     environment:
-      - ASPNETCORE_URLS=http://localhost:5001;https://localhost:5002
+      - ASPNETCORE_URLS=http://+:80 
       
   gateway:
     image: gateway
@@ -38,6 +38,8 @@ services:
       context: .
       dockerfile: PaymentGateway/Dockerfile
     ports:
-      - 44339:5002
+      - 5002:80
     environment:
-      - ASPNETCORE_URLS=http://localhost:5001;https://localhost:5002
+      - ASPNETCORE_URLS=http://+:80
+      - PaymentApi__Address=http://bank/payment
+      - ConnectionStrings__MongoDb=mongodb://root:testpwd@mongo:27017
