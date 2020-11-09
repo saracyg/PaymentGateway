@@ -42,7 +42,16 @@ namespace PaymentGateway.Payment
 
         public async Task<PaymentDetails> GetPayment(int id)
         {
-            var paymentDetails = await _paymentRepository.GetPayment(id);
+            Database.PaymentDetails paymentDetails;
+            try
+            {
+                paymentDetails = await _paymentRepository.GetPayment(id);
+            }
+            catch (Exception e)
+            {
+                _logger.Log(LogLevel.Error, $"Error when getting payment {id} from db", e);
+                throw;
+            }
 
             if (paymentDetails == null)
             {
@@ -50,7 +59,7 @@ namespace PaymentGateway.Payment
                 return null;
             }
 
-            return _mapper.Map<Contract.PaymentDetails>(paymentDetails);
+            return _mapper.Map<PaymentDetails>(paymentDetails);
         }
 
         private Database.PaymentDetails CreatePaymentDetails(Contract.Payment payment, PaymentResult result)

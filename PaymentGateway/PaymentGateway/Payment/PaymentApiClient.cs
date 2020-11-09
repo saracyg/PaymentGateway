@@ -47,7 +47,7 @@ namespace PaymentGateway.Payment
             catch (Exception e)
             {
                 _logger.Log(LogLevel.Error, "Failed to communicate with acquiring bank", e);
-                return null;
+                throw;
             }
 
             if (response.StatusCode != HttpStatusCode.OK)
