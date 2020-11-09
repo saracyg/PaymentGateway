@@ -31,7 +31,7 @@ namespace PaymentGateway.Tests
             _cardNumberMaskingService = new Mock<ICardNumberMaskingService>();
             _mapper = new Mock<IMapper>();
 
-            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object, _cardNumberMaskingService.Object, new Mock<ILogger>().Object);
+            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object, _cardNumberMaskingService.Object, new Mock<ILogger<PaymentProcessor>>().Object);
 
             _newPayment = new Contract.Payment();
 
