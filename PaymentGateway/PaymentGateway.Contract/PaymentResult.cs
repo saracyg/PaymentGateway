@@ -6,7 +6,7 @@ namespace PaymentGateway.Contract
     [JsonObject(NamingStrategyType = typeof(CamelCaseNamingStrategy))]
     public class PaymentResult
     {
-        public int PaymentId { get; set; }
+        public int? PaymentId { get; set; }
         public PaymentStatus PaymentStatus { get; set; }
     }
 

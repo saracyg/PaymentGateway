@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using AutoMapper;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using PaymentGateway.Contract;
@@ -30,7 +31,7 @@ namespace PaymentGateway.Tests
             _cardNumberMaskingService = new Mock<ICardNumberMaskingService>();
             _mapper = new Mock<IMapper>();
 
-            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object, _cardNumberMaskingService.Object);
+            _paymentProcessor = new PaymentProcessor(_apiClient.Object, _repository.Object, _mapper.Object, _cardNumberMaskingService.Object, new Mock<ILogger>().Object);
 
             _newPayment = new Contract.Payment();
 

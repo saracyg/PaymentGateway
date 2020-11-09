@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using PaymentGateway.Contract;
 
 namespace PaymentGateway.Payment
@@ -16,13 +18,15 @@ namespace PaymentGateway.Payment
         private readonly IPaymentRepository _paymentRepository;
         private readonly IMapper _mapper;
         private readonly ICardNumberMaskingService _cardNumberMaskingService;
+        private readonly ILogger<PaymentProcessor> _logger;
 
-        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository,IMapper mapper, ICardNumberMaskingService cardNumberMaskingService)
+        public PaymentProcessor(IPaymentApiClient paymentApiClient, IPaymentRepository paymentRepository, IMapper mapper, ICardNumberMaskingService cardNumberMaskingService, ILogger<PaymentProcessor> logger)
         {
             _paymentApiClient = paymentApiClient;
             _paymentRepository = paymentRepository;
             _mapper = mapper;
             _cardNumberMaskingService = cardNumberMaskingService;
+            _logger = logger;
         }
 
         public async Task<PaymentResult> ProcessNewPayment(Contract.Payment payment)
@@ -40,15 +44,22 @@ namespace PaymentGateway.Payment
         {
             var paymentDetails = await _paymentRepository.GetPayment(id);
 
+            if (paymentDetails == null)
+            {
+                _logger.Log(LogLevel.Debug, "Trying to get not existing payment", id);
+                return null;
+            }
+
             return _mapper.Map<Contract.PaymentDetails>(paymentDetails);
         }
 
         private Database.PaymentDetails CreatePaymentDetails(Contract.Payment payment, PaymentResult result)
         {
             var paymentDetails = _mapper.Map<Database.PaymentDetails>(payment);
-            paymentDetails.PaymentId = result.PaymentId;
-            paymentDetails.PaymentStatus = result.PaymentStatus;
+            paymentDetails.PaymentId = result?.PaymentId;
+            paymentDetails.PaymentStatus = result?.PaymentStatus;
             paymentDetails.MaskedCardNumber = _cardNumberMaskingService.MaskCardNumber(payment.CardNumber);
+            paymentDetails.TimeStamp = DateTime.UtcNow;
             return paymentDetails;
         }
     }
